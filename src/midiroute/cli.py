@@ -1,4 +1,5 @@
 import click
+from midiroute import midiutils
 
 
 @click.group()
@@ -9,10 +10,12 @@ def cli():
 @cli.command()
 @click.option("--input", "-i")
 @click.option("--output", "-o")
-def run(input, output):
+@click.option("--monitor", "-m")
+def run(input, output, monitor):
     print(f"I am running! Input {input}, output: {output}")
 
 
 @cli.command()
 def list_ports():
-    print("listing midi ports")
+    midiutils.list_midi_output_ports()
+    midiutils.list_midi_input_ports()
