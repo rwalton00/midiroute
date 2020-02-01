@@ -3,3 +3,4 @@ include *.yaml
 include LICENSE.txt
 include pyproject.toml
 include tox.ini
+recursive-include tests *.py

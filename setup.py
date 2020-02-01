@@ -1,5 +1,4 @@
-"""A command line utility for scanning audio file metadata.
-"""
+"""A command line utility for routing and monitoring MIDI ports."""
 
 import pathlib
 

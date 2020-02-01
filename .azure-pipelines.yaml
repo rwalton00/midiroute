@@ -17,11 +17,17 @@ stages:
       maxParallel: 5
       matrix:
         Linting:
+          vmImageName: ubuntu-18.04
           python.version: '3.8'
           tox.env: linting
         Typing:
+          vmImageName: ubuntu-18.04
           python.version: '3.8'
-          tox.env: Typing
+          tox.env: typing
+        Manifest:
+          vmImageName: ubuntu-18.04
+          python.version: '3.8'
+          tox.env: manifest
 
         Windows_py36:
           vmImageName: windows-latest
@@ -71,11 +77,13 @@ stages:
         vmImage: $(vmImageName)
 
     steps:
+    - bash: sudo apt-get install -y -qq libasound-dev
+      condition: eq( variables['Agent.OS'], 'Linux' )
+
     - task: UsePythonVersion@0
       displayName: Get Python for Python tools.
       inputs:
         versionSpec: '3.7'
-        addToPath: false
       name: pyTools
 
     - script: pip install --upgrade tox
