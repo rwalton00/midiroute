@@ -1,0 +1,93 @@
+trigger:
+  - master
+  - beta
+  - releases/*
+
+pr:
+  - master
+  - beta
+  - releases/*
+
+stages:
+- stage: AnalyseTest
+  displayName: Run static analysis and unit tests.
+  jobs:
+  - job: Test
+    strategy:
+      maxParallel: 5
+      matrix:
+        Linting:
+          python.version: '3.8'
+          tox.env: linting
+        Typing:
+          python.version: '3.8'
+          tox.env: Typing
+
+        Windows_py36:
+          vmImageName: windows-latest
+          python.version: '3.6'
+          tox.env: py36
+
+        Windows_py37:
+          vmImageName: windows-latest
+          python.version: '3.7'
+          tox.env: py37
+
+        Windows_py38:
+          vmImageName: windows-latest
+          python.version: '3.8'
+          tox.env: py38
+
+        macOS_py36:
+          vmImageName: macOS-10.14
+          python.version: '3.6'
+          tox.env: py36
+
+        macOS_py37:
+          vmImageName: macOS-10.14
+          python.version: '3.7'
+          tox.env: py37
+
+        macOS_py38:
+          vmImageName: macOS-10.14
+          python.version: '3.8'
+          tox.env: py38
+
+        Ubuntu_py36:
+          vmImageName: ubuntu-18.04
+          python.version: '3.6'
+          tox.env: py36
+
+        Ubuntu_py37:
+          vmImageName: ubuntu-18.04
+          python.version: '3.7'
+          tox.env: py37
+
+        Ubuntu_py38:
+          vmImageName: ubuntu-18.04
+          python.version: '3.8'
+          tox.env: py38
+    pool:
+        vmImage: $(vmImageName)
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: Get Python for Python tools.
+      inputs:
+        versionSpec: '3.7'
+        addToPath: false
+      name: pyTools
+
+    - script: $(pyTools.pythonLocation)/bin/pip install --upgrade tox
+      displayName: Install Python based tools.
+
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+      displayName: Use cached Python $(python.version) for tests.
+
+    - script: $(pyTools.pythonLocation)/bin/tox -e $(tox.env)
+      env:
+        TOX_AP_TEST_EXTRAS: azure-pipelines
+      displayName: run tox -e $(tox.env)
