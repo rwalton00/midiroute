@@ -1,0 +1,1 @@
+[![Build Status](https://dev.azure.com/rwalton00/midiroute/_apis/build/status/rwalton00.midiroute?branchName=master)](https://dev.azure.com/rwalton00/midiroute/_build/latest?definitionId=1&branchName=master)
