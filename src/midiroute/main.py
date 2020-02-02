@@ -1,4 +1,5 @@
 """midiroute is a command line tool for routing and monitoring MIDI ports."""
+
 from midiroute import cli
 
 

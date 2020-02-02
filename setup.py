@@ -12,7 +12,7 @@ with open(str(pathlib.Path(here, "README.md")), encoding="utf-8") as f:
 
 PROJECT_NAME = "midiroute"
 DESCRIPTION = __doc__
-INSTALL_REQUIRES = ["click", "mido", "python-rtmidi"]
+INSTALL_REQUIRES = ["click", "mido", "python-rtmidi", "tabulate"]
 EXTRAS_REQUIRE = {
     "tests": ["pytest", "coverage[toml]>=5.0.2"],
 }

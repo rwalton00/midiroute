@@ -1,5 +1,10 @@
 """Command line interface module."""
+
+import asyncio
+
 import click
+import tabulate
+
 from midiroute import midiutils
 
 
@@ -10,19 +15,17 @@ def cli() -> None:
 
 
 @cli.command()
-@click.option("--input", "-i")
-@click.option("--output", "-o")
-@click.option("--monitor", "-m")
-def run(input: str, output: str, monitor: str) -> None:
+@click.option("--input-port", "-i")
+@click.option("--output-port", "-o")
+@click.option("--monitor", "-m", is_flag=True)
+def run(input_port: str, output_port: str, monitor: bool) -> None:
     """'run' command handler."""
-    print(f"I am running! Input {input}, output: {output}")
+    asyncio.run(midiutils.connect_and_stream_ports(input_port, output_port, monitor))
 
 
 @cli.command()
-@click.option("--filter-opt", "-f")
-def list_ports(filter_opt: str) -> None:
+def list_ports() -> None:
     """'list-ports' command handler."""
-    if "out" not in filter_opt:
-        midiutils.list_midi_output_ports()
-    if "in" not in filter_opt:
-        midiutils.list_midi_input_ports()
+    inports = midiutils.list_input_port_names()
+    outports = midiutils.list_output_port_names()
+    print(tabulate.tabulate(list(zip(inports, outports)), headers=["Input", "Output"]))
