@@ -2,6 +2,8 @@
 
 import asyncio
 
+from typing import Any
+
 import click
 import tabulate
 
@@ -16,11 +18,12 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--input-port", "-i")
-@click.option("--output-port", "-o")
+@click.option("--output-ports", "-o")
 @click.option("--monitor", "-m", is_flag=True)
-def run(input_port: str, output_port: str, monitor: bool) -> None:
+def run(input_port: str, output_ports: Any, monitor: bool) -> None:
     """'run' command handler."""
-    asyncio.run(midiutils.connect_and_stream_ports(input_port, output_port, monitor))
+    output_ports = output_ports.split(",")
+    asyncio.run(midiutils.stream(input_port, output_ports, monitor))
 
 
 @cli.command()
