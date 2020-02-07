@@ -2,6 +2,7 @@
 
 import asyncio
 import contextlib
+import time
 
 from typing import Any, List
 
@@ -43,6 +44,7 @@ async def input_port_stream(port_name: str, event_queues: List[asyncio.Queue]) -
     _check_valid_port_name(port_name, mido.get_input_names())
 
     def callback(msg: mido.Message) -> None:
+        msg.time = time.monotonic()
         for event_queue in event_queues:
             loop.call_soon_threadsafe(event_queue.put_nowait, msg)
 
@@ -53,17 +55,18 @@ async def input_port_stream(port_name: str, event_queues: List[asyncio.Queue]) -
         input_port.close()
 
 
-async def _send(port: mido.ports.BasePort, msg: mido.Message) -> None:
-    """Coroutine to send a mido.Message over a mido.BasePort async."""
-    port.send(msg)
-
-
 async def output_port_stream(output_port_name: str, event_queue: asyncio.Queue) -> None:
     """Route messages in the event_queue to the midi output port with the given name."""
     _check_valid_port_name(output_port_name, mido.get_output_names())
+
+    async def _send(port: mido.ports.BasePort, msg: mido.Message) -> None:
+        """Coroutine to send a mido.Message over a mido.BasePort async."""
+        port.send(msg)
+
     with mido.open_output(output_port_name) as output_port:
         while True:
             msg = await event_queue.get()
+            msg.time = time.monotonic() - msg.time
             asyncio.create_task(_send(output_port, msg))
 
 

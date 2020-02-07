@@ -14,7 +14,7 @@ PROJECT_NAME = "midiroute"
 DESCRIPTION = __doc__
 INSTALL_REQUIRES = ["click", "mido", "python-rtmidi", "tabulate"]
 EXTRAS_REQUIRE = {
-    "tests": ["pytest", "coverage[toml]>=5.0.2"],
+    "tests": ["pytest", "pytest-asyncio", "asynctest", "coverage[toml]>=5.0.2"],
 }
 EXTRAS_REQUIRE["dev"] = EXTRAS_REQUIRE["tests"] + ["pre-commit"]
 EXTRAS_REQUIRE["azure-pipelines"] = EXTRAS_REQUIRE["tests"] + ["pytest-azurepipelines"]

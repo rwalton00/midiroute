@@ -29,11 +29,6 @@ stages:
           python.version: '3.8'
           tox.env: manifest
 
-        Windows_py36:
-          vmImageName: windows-latest
-          python.version: '3.6'
-          tox.env: py36
-
         Windows_py37:
           vmImageName: windows-latest
           python.version: '3.7'
@@ -44,11 +39,6 @@ stages:
           python.version: '3.8'
           tox.env: py38
 
-        macOS_py36:
-          vmImageName: macOS-10.14
-          python.version: '3.6'
-          tox.env: py36
-
         macOS_py37:
           vmImageName: macOS-10.14
           python.version: '3.7'
@@ -58,11 +48,6 @@ stages:
           vmImageName: macOS-10.14
           python.version: '3.8'
           tox.env: py38
-
-        Ubuntu_py36:
-          vmImageName: ubuntu-18.04
-          python.version: '3.6'
-          tox.env: py36
 
         Ubuntu_py37:
           vmImageName: ubuntu-18.04
