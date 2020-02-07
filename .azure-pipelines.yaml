@@ -14,7 +14,7 @@ stages:
   jobs:
   - job: Test
     strategy:
-      maxParallel: 5
+      maxParallel: 10
       matrix:
         Linting:
           vmImageName: ubuntu-18.04
