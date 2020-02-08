@@ -66,7 +66,6 @@ async def output_port_stream(output_port_name: str, event_queue: asyncio.Queue) 
     with mido.open_output(output_port_name) as output_port:
         while True:
             msg = await event_queue.get()
-            msg.time = time.monotonic() - msg.time
             asyncio.create_task(_send(output_port, msg))
 
 
@@ -75,7 +74,7 @@ async def print_stream(input_port: str, output_port: str, queue: asyncio.Queue) 
     # wrapper to schedule prints on the event loop.
     async def _print() -> None:
         """Async print coroutine."""
-        print(f"I:{input_port} - O:{output_port}: {msg}")
+        print(f"Input:'{input_port}' -> Output:'{output_port}': {msg}")
 
     while True:
         msg = await queue.get()
@@ -98,8 +97,8 @@ async def stream(input_name: str, output_names: str, enable_monitor: bool) -> No
                     print_stream(input_name, ",".join(output_names), ui_queue)
                 )
             )
-        asyncio.gather(*output_sinks)
         await msg_queue.join()
         await ui_queue.join()
+        asyncio.gather(*output_sinks, return_exceptions=True)
         while True:
             await asyncio.sleep(1)
