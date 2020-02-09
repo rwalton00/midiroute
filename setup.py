@@ -21,7 +21,7 @@ EXTRAS_REQUIRE["azure-pipelines"] = EXTRAS_REQUIRE["tests"] + ["pytest-azurepipe
 
 setup(
     name=PROJECT_NAME,
-    version="1.0.0",
+    version="1.0.0-beta.1",
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",
