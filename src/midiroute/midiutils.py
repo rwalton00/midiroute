@@ -69,32 +69,36 @@ async def output_port_stream(output_port_name: str, event_queue: asyncio.Queue) 
             asyncio.create_task(_send(output_port, msg))
 
 
-async def print_stream(input_port: str, output_port: str, queue: asyncio.Queue) -> None:
+async def print_stream(
+    input_port_name: str, output_port_names: str, queue: asyncio.Queue
+) -> None:
     """Print messages in the queue."""
     # wrapper to schedule prints on the event loop.
     async def _print() -> None:
         """Async print coroutine."""
-        print(f"Input:'{input_port}' -> Output:'{output_port}': {msg}")
+        print(f"Input:'{input_port_name}' -> Output:'{output_port_names}': {msg}")
 
     while True:
         msg = await queue.get()
         asyncio.create_task(_print())
 
 
-async def stream(input_name: str, output_names: str, enable_monitor: bool) -> None:
+async def stream(
+    input_port_name: str, output_port_names: List[str], enable_monitor: bool
+) -> None:
     """Stream an asynchronous queue of MIDI messages."""
     msg_queue: asyncio.Queue = asyncio.Queue()
     ui_queue: asyncio.Queue = asyncio.Queue()
     output_sinks: Any = []
-    async with input_port_stream(input_name, [msg_queue, ui_queue]):
+    async with input_port_stream(input_port_name, [msg_queue, ui_queue]):
         output_sinks = [
             asyncio.create_task(output_port_stream(output_name, msg_queue))
-            for output_name in output_names
+            for output_name in output_port_names
         ]
         if enable_monitor:
             output_sinks.append(
                 asyncio.create_task(
-                    print_stream(input_name, ",".join(output_names), ui_queue)
+                    print_stream(input_port_name, ",".join(output_port_names), ui_queue)
                 )
             )
         await msg_queue.join()
